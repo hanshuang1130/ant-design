@@ -115,4 +115,29 @@ describe('Upload List', () => {
       },
     });
   });
+
+  it('does not change filelist when beforeUpload returns false', () => {
+    const handleChange = jest.fn();
+    const wrapper = mount(
+      <Upload
+        listType="picture"
+        defaultFileList={fileList}
+        onChange={handleChange}
+        beforeUpload={() => false}
+      >
+        <button>upload</button>
+      </Upload>
+    );
+
+    wrapper.find('input').simulate('change', {
+      target: {
+        files: [
+          { filename: 'foo.png' },
+        ],
+      },
+    });
+
+    expect(wrapper.state().fileList).toBe(fileList);
+    expect(handleChange.mock.calls[0][0].fileList).toEqual([]);
+  });
 });
